@@ -45,7 +45,7 @@ public class AuthenticationService {
         // Now fetch the user just once
         User user = userDetailsService.getUserByUsername(username);
         
-        // Return the user ID
+        // Return the user
         return user;
     }
     

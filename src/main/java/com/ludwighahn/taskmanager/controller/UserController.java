@@ -18,6 +18,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
 import java.util.List;
 import java.util.Map;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("/api/users")
@@ -70,7 +73,8 @@ public class UserController {
     }
 
     @PutMapping("/update/username")
-    public ResponseEntity<String> updateUsername(@RequestBody Map<String, String> request, HttpServletRequest httpRequest) {
+    public ResponseEntity<String> updateUsername(@RequestBody Map<String, String> request,
+            HttpServletRequest httpRequest) {
         String newUsername = request.get("username");
 
         // Get the authenticated user
@@ -86,7 +90,8 @@ public class UserController {
     }
 
     @PutMapping("/update/email")
-    public ResponseEntity<String> updateEmail(@RequestBody Map<String, String> request, HttpServletRequest httpRequest) {
+    public ResponseEntity<String> updateEmail(@RequestBody Map<String, String> request,
+            HttpServletRequest httpRequest) {
         String newEmail = request.get("email");
 
         // Get the authenticated user
@@ -95,4 +100,30 @@ public class UserController {
         userService.updateEmail(user, newEmail);
         return ResponseEntity.ok("Email updated successfully to (" + newEmail + ")");
     }
+
+    @PutMapping("/update/password")
+    public ResponseEntity<String> updatePassword(@RequestBody Map<String, String> request,
+            HttpServletRequest httpRequest) {
+        String newPassword = request.get("password");
+
+        // Get the authenticated user
+        User user = authenticationService.getAuthenticatedUser(httpRequest);
+
+        userService.updatePassword(user, newPassword);
+        return ResponseEntity.ok("Password updated successfully");
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/update/role")
+    public ResponseEntity<String> updateRole(@RequestBody Map<String, String> request, HttpServletRequest httpRequest) {
+        User user = authenticationService.getAuthenticatedUser(httpRequest);
+        if (!user.getRole().equals("ADMIN")) {
+            return new ResponseEntity<>("Only admins can update roles", HttpStatus.UNAUTHORIZED);
+        }
+        String newRole = request.get("role");
+        String usernameUpdateRole = request.get("username");
+        userService.updateRole(userService.findByUsername(usernameUpdateRole).get(), newRole);
+        return ResponseEntity.ok("Role updated successfully to (" + newRole + ")");
+    }
+
 }

@@ -34,7 +34,7 @@ public class UserService {
     public List<UserDTO> getAllUsers() {
         return userRepository.findAll()
                 .stream()
-                .map(user -> new UserDTO(user.getUsername(), user.getEmail(), user.getRole()))
+                .map(user -> new UserDTO(user.getId(), user.getUsername(), user.getEmail(), user.getRole()))
                 .collect(Collectors.toList());
     }
 
@@ -46,6 +46,16 @@ public class UserService {
 
     public void updateEmail(User user, String newEmail) {
         user.setEmail(newEmail);
+        userRepository.save(user);
+    }
+
+    public void updatePassword(User user, String newPassword) {
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
+    public void updateRole(User user, String newRole) {
+        user.setRole(newRole);
         userRepository.save(user);
     }
 

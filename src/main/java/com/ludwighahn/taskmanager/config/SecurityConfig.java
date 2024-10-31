@@ -28,6 +28,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/users/register", "/api/users/login").permitAll()  // Public access for login & registration
                 .requestMatchers("/api/users/all").hasRole("ADMIN")  // Only ADMIN can access getAllUsers
+                .requestMatchers("/api/update/role").hasRole("ADMIN")
                 .anyRequest().authenticated()  // All other requests require authentication
             )
             .sessionManagement(session -> session
