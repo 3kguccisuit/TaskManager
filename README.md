@@ -42,3 +42,55 @@ The project includes the following dependencies:
 - **Maven**
 - **PostgreSQL** or another SQL database
 
+## Usage
+
+### User Endpoints
+
+- **Register**: `POST api/users/register`
+  - **Request Body**:
+    ```json
+    {
+      "username": "userName",
+      "password": "password",
+      "email": "email@example.com 
+    }
+    ```
+
+- **Login**: `POST /api/users/login`
+  - **Request Body**:
+    ```json
+    {
+      "username": "admin",
+      "password": "password"
+    }
+    ```
+  - Returns a JWT token upon successful authentication.
+
+### Task Endpoints
+All Task Endpoints require the `Authorization` header with a Bearer token, which can be obtained by logging in.
+- **Get All Tasks**: `GET /api/tasks/all`
+  
+- **Create Task**: `POST /api/tasks/create`
+  - **Request Body**:
+    ```json
+    {
+      "title": "Complete project",
+      "description": "Finish the backend implementation",
+      "status": "pending",
+      "priority": "high",
+      "dueDate": "2024-12-31"
+    }
+    ```
+
+- **Update Task**: `PUT /api/tasks/{taskId}`
+  - **Request Body**:
+    ```json
+    {
+      "title": "Updated Task Title",
+      "description": "Updated description",
+      "status": "completed",
+      "priority": "low",
+      "dueDate": "2024-12-31"
+    }
+    ```
+- **Delete Task**: `DELETE /api/tasks/{taskId}`
