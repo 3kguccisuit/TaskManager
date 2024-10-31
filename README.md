@@ -66,6 +66,40 @@ The project includes the following dependencies:
     ```
   - Returns a JWT token upon successful authentication.
 
+- **Update Username**: `PUT api/update/username`
+  - **Request Body**:
+    ```json
+    {
+      "username": "userName"
+    }
+    ```
+
+- **Update Email**: `PUT api/update/email`
+  - **Request Body**:
+    ```json
+    {
+      "email": "email"
+    }
+    ```
+- **Update Password**: `PUT api/update/password`
+  - **Request Body**:
+    ```json
+    {
+      "password": "password"
+    }
+    ```
+### Admin Endpoints
+- **Update Role**: `PUT api/update/role`
+  - **Request Body**:
+    ```json
+    {
+      "role": "ADMIN",
+      "username": "usernameToChangeRole"
+    }
+    ```
+
+- **Get All Users**: `GET /api/users`
+
 ### Task Endpoints
 All Task Endpoints require the `Authorization` header with a Bearer token, which can be obtained by logging in.
 - **Get All Tasks**: `GET /api/tasks/all`
