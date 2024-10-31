@@ -9,11 +9,15 @@ import org.springframework.web.bind.annotation.*;
 
 import com.ludwighahn.taskmanager.dto.UserDTO;
 import com.ludwighahn.taskmanager.model.User;
+import com.ludwighahn.taskmanager.service.AuthenticationService;
 import com.ludwighahn.taskmanager.service.UserService;
 import com.ludwighahn.taskmanager.util.JwtUtil;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import java.util.Optional;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
@@ -27,6 +31,9 @@ public class UserController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private AuthenticationService authenticationService;
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody User user) {
@@ -60,5 +67,32 @@ public class UserController {
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         List<UserDTO> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
+    }
+
+    @PutMapping("/update/username")
+    public ResponseEntity<String> updateUsername(@RequestBody Map<String, String> request, HttpServletRequest httpRequest) {
+        String newUsername = request.get("username");
+
+        // Get the authenticated user
+        User user = authenticationService.getAuthenticatedUser(httpRequest);
+
+        // Check if the new username is already taken
+        if (userService.findByUsername(newUsername).isPresent()) {
+            return new ResponseEntity<>("Username already exists", HttpStatus.BAD_REQUEST);
+        }
+
+        userService.updateUsername(user, newUsername);
+        return ResponseEntity.ok("Username updated successfully to (" + newUsername + ") , please log in again");
+    }
+
+    @PutMapping("/update/email")
+    public ResponseEntity<String> updateEmail(@RequestBody Map<String, String> request, HttpServletRequest httpRequest) {
+        String newEmail = request.get("email");
+
+        // Get the authenticated user
+        User user = authenticationService.getAuthenticatedUser(httpRequest);
+
+        userService.updateEmail(user, newEmail);
+        return ResponseEntity.ok("Email updated successfully to (" + newEmail + ")");
     }
 }

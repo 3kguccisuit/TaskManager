@@ -11,6 +11,7 @@ import com.ludwighahn.taskmanager.repository.UserRepository;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.List;
+
 @Service
 public class UserService {
 
@@ -26,14 +27,26 @@ public class UserService {
 
     public User registerNewUser(User user) {
         user.setRole("USER");
-        user.setPassword(passwordEncoder.encode(user.getPassword())); 
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
-        public List<UserDTO> getAllUsers() {
+    public List<UserDTO> getAllUsers() {
         return userRepository.findAll()
-            .stream()
-            .map(user -> new UserDTO(user.getUsername(), user.getEmail(), user.getRole()))
-            .collect(Collectors.toList());
+                .stream()
+                .map(user -> new UserDTO(user.getUsername(), user.getEmail(), user.getRole()))
+                .collect(Collectors.toList());
     }
+
+    // Method to update username
+    public void updateUsername(User user, String newUsername) {
+        user.setUsername(newUsername);
+        userRepository.save(user);
+    }
+
+    public void updateEmail(User user, String newEmail) {
+        user.setEmail(newEmail);
+        userRepository.save(user);
+    }
+
 }

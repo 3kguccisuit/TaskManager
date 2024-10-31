@@ -32,5 +32,21 @@ public class AuthenticationService {
         // Return the user ID
         return user != null ? user.getId() : null;
     }
+
+    public <Optional>User getAuthenticatedUser(HttpServletRequest request){
+        String authorizationHeader = request.getHeader("Authorization");
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            return null;
+        }
+        
+        String token = authorizationHeader.substring(7);
+        String username = jwtUtil.extractUsername(token);
+    
+        // Now fetch the user just once
+        User user = userDetailsService.getUserByUsername(username);
+        
+        // Return the user ID
+        return user;
+    }
     
 }
