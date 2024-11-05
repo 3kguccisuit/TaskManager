@@ -23,7 +23,7 @@ public class TaskController {
 
     @GetMapping("/all")
     public ResponseEntity<List<TaskDTO>> getAllTasks(HttpServletRequest request) {
-        Long userId = authenticationService.getAuthenticatedUserId(request); // Use the existing method
+        Long userId = authenticationService.getAuthenticatedUserId(request); 
         List<TaskDTO> tasks = taskService.getAllTasks(userId);
         return ResponseEntity.ok(tasks);
     }
